@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>mockr — practice log</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<header><a class="brand" href="/">mockr<span aria-hidden="true">↗</span></a><span class="eyebrow">YOUR INTERVIEW PRACTICE LOG</span><span id="provider" class="badge">Loading…</span></header>
+<main>
+<section class="intro"><p class="eyebrow">REHEARSE. REFLECT. REPEAT.</p><h1>Get better at<br>thinking out loud.</h1><p>One focused round. Honest evidence.<br>A clearer idea of what to practice next.</p></section>
+<div class="layout">
+<aside aria-label="Progress dashboard">
+<div class="section-heading"><h2>Your practice</h2><span id="count" class="number">0</span></div>
+<p class="hint">Scores are practice signals, not hiring predictions. Compare like rounds and providers.</p>
+<h3>Topics to revisit</h3><div id="topics"><p>No scores yet. Complete a round to find your next focus.</p></div>
+<h3>Score trend <span class="hint">latest 50</span></h3><label for="trend-kind" class="sr-only">Trend round type</label><select id="trend-kind"><option value="dsa">DSA</option><option value="design">System design</option><option value="behavioural">Behavioural</option></select><div id="trend"></div>
+<h3>Recent rounds</h3><div id="history"></div>
+</aside>
+<section class="practice" aria-labelledby="round-title">
+<div class="section-heading"><h2 id="round-title">Choose your next round</h2><span class="dot" aria-hidden="true"></span></div>
+<form id="start-form"><label for="kind">Round type</label><select id="kind"><option value="dsa">DSA / Python</option><option value="design">System design</option><option value="behavioural">Behavioural / STAR</option></select><label for="question">Question</label><select id="question"></select><button type="submit">Start practice <span aria-hidden="true">→</span></button></form>
+<div id="round" hidden><ol id="stages" aria-label="Round stages"></ol><p id="prompt" class="prompt"></p><div class="voice"><button type="button" id="speak" class="secondary">Read prompt</button><button type="button" id="dictate" class="secondary">Dictate answer</button><button type="button" id="stop-voice" class="secondary">Stop voice</button></div><p class="hint">Voice is optional. Browser speech support varies; recognition may send audio to your browser vendor. Code is best typed. Nothing is submitted automatically.</p><form id="answer-form"><label for="answer">Your answer</label><textarea id="answer" rows="8" required maxlength="65536" spellcheck="false" placeholder="Explain your reasoning. Be specific about assumptions and trade-offs."></textarea><button type="submit" id="send">Send answer →</button></form></div>
+<p id="status" role="status" aria-live="polite"></p>
+<div id="scorecard" hidden></div><details id="transcript-box" hidden><summary>Read transcript</summary><div id="transcript"></div></details>
+</section></div>
+<footer>Local-first. No account. No telemetry. <span>Built for practice, not prediction.</span></footer>
+</main></body></html>
