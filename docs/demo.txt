@@ -1,0 +1,58 @@
+mockr demo | OFFLINE MOCK · deterministic heuristic, not an LLM evaluation
+
+DSA | Parcel pair
+Scorecard: 4.75/5
+5/5 hidden tests · passed
+  approach: 5/5
+    Evidence: "I maintain a map from weight to its earliest previously seen index. For each j, I check target minus weight before insertion. This preserves i less than j and r"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  correctness: 5/5
+    Evidence: "def solve(weights, target):\n seen = {}\n for j,w in enumerate(weights):\n  if target-w in seen: return [seen[target-w],j]\n  seen.setdefault(w,j)\n return []"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  complexity: 4/5
+    Evidence: "For n weights, expected time is O(n) and auxiliary space O(n), because each parcel causes at most one lookup and insertion. Adversarial hash behavior can be O(n"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  communication: 5/5
+    Evidence: "I maintain a map from weight to its earliest previously seen index. For each j, I check target minus weight before insertion. This preserves i less than j and r"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+
+SYSTEM DESIGN | Neighbourhood lending library
+Scorecard: 3.50/5
+  requirements: 3/5
+    Evidence: "Support catalog search, per-copy holds, returns, FIFO waitlists and asynchronous alerts. Non-goals are payments and shipping. Reservation correctness takes prio"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  estimates: 4/5
+    Evidence: "With 50000 members and three catalog reads daily, average reads are 1.74 per second; at 50x peak about 87. If each creates 12 reservations yearly, 600000 record"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  api: 3/5
+    Evidence: "POST /copies/{copy_id}/holds requires a client idempotency key, authenticated member and expiry policy. A reused key returns the original hold. Conflicts return"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  data_model: 4/5
+    Evidence: "Titles and physical copies are separate. Holds reference a copy and member, with state and expiry timestamps. A partial unique constraint protects active holds."
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  scaling: 4/5
+    Evidence: "An outbox row commits with the hold. Workers deliver notifications with deduplication and backoff; failed alerts never undo a reservation. Index catalog queries"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  tradeoffs: 3/5
+    Evidence: "Postgres transactions simplify unique ownership. Eventual consistency works for catalog indexing but not concurrent claims. Sharding by neighborhood could isola"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+
+BEHAVIOURAL | An unclear goal
+Scorecard: 3.80/5
+  context: 3/5
+    Evidence: "During a fictional neighborhood science fair, five organizers disagreed about what better registration meant. Some wanted more fields; others wanted fewer aband"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  ownership: 3/5
+    Evidence: "I owned turning the request into a measurable proposal, not making the final policy decision. I agreed with the organizer that success meant fewer incomplete re"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  actions: 5/5
+    Evidence: "I mapped the existing flow with two organizers, counted completion events on a synthetic trial, and asked four volunteers to narrate their experience. I propose"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  results: 4/5
+    Evidence: "Across two small synthetic trial groups of thirty, completion rose from eighteen to twenty-four. This was directional, not causal proof: participants differed. "
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+  reflection: 4/5
+    Evidence: "I would randomize the next trial and predefine a success threshold. In the next planning discussion I separated the desired outcome from the proposed feature be"
+    Next: Offline heuristic: add concrete reasoning, alternatives, and measurable evidence; use a real judge for coaching quality.
+
+3 rounds completed · 15 evidence-backed rubric scores
