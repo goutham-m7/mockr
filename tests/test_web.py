@@ -79,6 +79,7 @@ def test_browser_round_and_history(app):
     [
         {"Origin": "https://evil.example"},
         {"X-Mockr-Token": "wrong"},
+        {"X-Mockr-Token": "é"},
         {"Host": "evil.example"},
     ],
 )
@@ -96,3 +97,16 @@ def test_bad_requests_and_paths(app):
     assert app("GET", "/../../pyproject.toml")[0] == 404
     assert app("POST", "/api/start", {"question_id": "x" * 200000})[0] == 413
     assert app("GET", "/api/history")[0] == 200
+
+
+def test_json_shape_and_media_type(app):
+    assert app("POST", "/api/start", [1, 2])[0] == 400
+    assert app("POST", "/api/start", {}, {"Content-Type": "text/plain"})[0] == 415
+    assert app("GET", "/api/config", headers={"Host": "evil.example"})[0] == 403
+    assert app("POST", "/unknown", {})[0] == 404
+
+
+def test_active_round_limit(app):
+    for _ in range(8):
+        assert app("POST", "/api/start", {"question_id": "design-job-board"})[0] == 200
+    assert app("POST", "/api/start", {"question_id": "design-job-board"})[0] == 409

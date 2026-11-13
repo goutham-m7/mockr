@@ -164,7 +164,9 @@ class Sandbox:
                         or set(data) != {"result"}
                     ):
                         statuses.append("runtime-error")
-                    elif data["result"] == case.expected:
+                    elif json.dumps(data["result"], sort_keys=True) == json.dumps(
+                        case.expected, sort_keys=True
+                    ):
                         passed += 1
                     else:
                         statuses.append("wrong-answer")

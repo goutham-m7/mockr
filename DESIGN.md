@@ -6,7 +6,7 @@ Practice interviews need reproducible questions, executable feedback, and eviden
 ## Decisions and alternatives
 Python 3.12 fits submitted Python solutions, SQLite, and a dependency-free HTTP server. A TypeScript frontend plus Python runner would add a second runtime without improving the core. SQLite avoids server setup; a local single-user UI avoids authentication and cloud storage. Markdown files contain a JSON metadata fence and a readable prompt, making the bank inspectable and portable without a YAML dependency.
 
-Native macOS Seatbelt isolates a fresh Python subprocess for every hidden case; Linux uses bubblewrap with unshared namespaces and a read-only runtime. Both deny network, protect host files, limit CPU/memory/file sizes/processes, and enforce wall time. Unsupported hosts fail closed. Resource limits alone are not a sandbox. This is defense in depth for local practice, not a hostile multi-tenant execution service; kernel/interpreter vulnerabilities remain out of scope.
+Native macOS Seatbelt isolates a fresh Python subprocess for every hidden case; Linux uses bubblewrap with unshared namespaces and a read-only runtime. Both deny network, protect host files, limit CPU/file sizes/processes, and enforce wall time. Linux additionally caps address space at 256 MiB; macOS has no hard memory cap in this implementation. Unsupported hosts fail closed. Resource limits alone are not a sandbox. This is defense in depth for local practice, not a hostile multi-tenant execution service; kernel/interpreter vulnerabilities remain out of scope. Results use canonical JSON equality: booleans are not integers, object key ordering is irrelevant, and integer/float representation is significant.
 
 ## Components and data flow
 CLI/browser → round state machine → provider (mock or OpenAI-compatible HTTP).
@@ -36,4 +36,15 @@ Fresh local repository and schema version 1; create tables on first use. Default
 - CLI/demo: run tests, lint, demo, calibration and capture actual output in README.
 
 ## Limitations and roadmap
-No resume upload, video, editor integration, distributed execution, anti-cheat, or hiring recommendations. Expand independently human-labeled calibration, add a stronger container/VM execution backend for hostile code, and conduct cross-browser microphone accessibility testing. The bundled small calibration set is author-scored synthetic data, not a representative validity study.
+No resume upload, video, editor integration, distributed execution, anti-cheat, or hiring recommendations. Expand independently human-labeled calibration, add a stronger container/VM execution backend for hostile code, and conduct cross-browser microphone accessibility testing. The bundled calibration set is unscored synthetic material, not a representative validity study.
+
+## Interview notes
+
+### 1. Isolation is an operating-system responsibility
+Restricted builtins and AST allowlists cannot safely execute general Python. A subprocess timeout alone still exposes home-directory files and network credentials. Seatbelt and bubblewrap constrain the process before candidate code loads; fresh workers prevent test-to-test state leakage. An interpreter preflight separates a broken host sandbox from a candidate runtime error. Default-deny profiles need platform maintenance; the native macOS path was exercised locally, while Linux awaits its CI run. At 100× usage on multiple machines, use a job queue and disposable microVMs with hard memory limits, not this local HTTP server.
+
+### 2. Evidence validation is distinct from score validity
+Model-produced JSON is not trusted just because it parses. The judge validator checks exact criterion coverage, integer bounds and quote provenance against candidate answers. This catches fabricated quotes and malformed scores, but cannot prove a quote supports a score or defeat every prompt injection. The deterministic mock exercises control flow; its word-count score is deliberately not a substitute for a judge. Human agreement remains pending: 12 synthetic samples have 60 empty human score cells. At 100× data, use independent blinded raters, held-out answers, disagreement analysis, per-round calibration and confidence intervals.
+
+### 3. A fixed state machine bounds a conversational interface
+An unconstrained agent can skip code, reveal answers or ignore complexity. Fixed stage ordering owns progression; model probes only ask about the preceding answer. A failed probe/judge does not advance the transcript. SQLite saves completed evidence records atomically with unique ids; an interrupted round remains unsaved. A single process avoids distributed coordination, but provider calls block its local HTTP server. At 100× interactive concurrency, move requests and sandbox work to bounded workers, persist in-progress turns and use transactional idempotency keys for answer submissions.
