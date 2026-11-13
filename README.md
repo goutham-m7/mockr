@@ -63,6 +63,8 @@ uv run mockr serve --provider openai
 
 Use any compatible `/chat/completions` service supporting JSON-object output. `MOCKR_BASE_URL` should include its API prefix, not `/chat/completions`. HTTPS is required except for loopback endpoints. Keys come only from the environment; `.env` files are not loaded automatically. Real-provider mode sends the question and candidate transcript to that endpoint and can incur charges. No live paid model was called during verification; a real local HTTP fixture verified the request/response contract and failure handling.
 
+Provider redirects are rejected rather than forwarding your API key to a second destination. Provider failures expose a redacted error, not response bodies or authorization headers.
+
 ## How a round works
 
 | Round | Required progression | Scored dimensions |
@@ -166,7 +168,8 @@ Local verification used macOS arm64 and Python 3.12.15. These are implementation
 | Command | Observed result |
 |---|---|
 | `uv run mockr demo` | Three completed rounds; 15 quote-validated scores; DSA passed 5/5 cases. Scores: DSA 4.75, design 3.50, behavioural 3.80. |
-| `uv run pytest -q --cov=mockr_coach --cov-report=term-missing` | 107 tests passed; 88% statement coverage. The isolated worker is exercised by real subprocess tests but does not contribute in-process coverage. |
+| `uv run pytest -q --cov=mockr_coach --cov-report=term-missing` | 108 tests passed; 88% statement coverage. The isolated worker is exercised by real subprocess tests but does not contribute in-process coverage. |
+| `uv run python -c 'from mockr_coach.bank import load_bank; b=load_bank(); print(f"questions={len(b)} hidden_cases={sum(len(q.tests) for q in b)}")'` | `questions=30 hidden_cases=50` |
 | `uv run pytest tests/test_sandbox.py -q` | 21 tests passed, including every bundled DSA reference against all 50 hidden cases and denial of host reads, host writes, network and child processes. |
 | `uv run ruff check .` | All checks passed. |
 | `uv run ruff format --check .` | All files formatted. |
