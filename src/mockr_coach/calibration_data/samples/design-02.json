@@ -1,0 +1,34 @@
+{
+  "id": "design-02",
+  "kind": "design",
+  "prompt": "Design a service that lets neighbours lend physical books. Prevent two borrowers reserving the same copy; support waiting lists, late returns, and unreliable notifications.",
+  "provenance": "Original synthetic answer authored for mockr; not an actual candidate or human-scored label.",
+  "intended_band": "developing",
+  "transcript": [
+    {
+      "stage": "requirements",
+      "answer": "Users reserve and return books. Search is needed."
+    },
+    {
+      "stage": "estimates",
+      "answer": "Assume ten thousand users and a thousand requests each day."
+    },
+    {
+      "stage": "api",
+      "answer": "POST /reservations takes book and user ids."
+    },
+    {
+      "stage": "data-model",
+      "answer": "Books and users each have an id. Reservations link them."
+    },
+    {
+      "stage": "scaling",
+      "answer": "A cache can accelerate the catalog."
+    },
+    {
+      "stage": "trade-offs",
+      "answer": "SQL is easier for relationships, while NoSQL can scale."
+    }
+  ],
+  "execution": null
+}

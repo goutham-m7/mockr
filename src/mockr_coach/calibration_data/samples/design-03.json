@@ -1,0 +1,34 @@
+{
+  "id": "design-03",
+  "kind": "design",
+  "prompt": "Design a service that lets neighbours lend physical books. Prevent two borrowers reserving the same copy; support waiting lists, late returns, and unreliable notifications.",
+  "provenance": "Original synthetic answer authored for mockr; not an actual candidate or human-scored label.",
+  "intended_band": "competent",
+  "transcript": [
+    {
+      "stage": "requirements",
+      "answer": "Reserve individual copies, not titles. Limit to one active borrower per copy and prioritize correct reservations over stale search. Notifications are asynchronous."
+    },
+    {
+      "stage": "estimates",
+      "answer": "Assume 20000 users with two reads per day and 2000 daily writes. Average read load is 0.46 requests per second; a 20x peak is under ten per second."
+    },
+    {
+      "stage": "api",
+      "answer": "POST /copies/{id}/reservations accepts an idempotency key and returns a reservation or conflict. GET /reservations/{id} returns status. Errors distinguish unavailable copies and invalid users."
+    },
+    {
+      "stage": "data-model",
+      "answer": "Copy has copy_id and title_id. Reservation has id, copy_id, borrower_id and status. A partial unique index prevents multiple active reservations per copy."
+    },
+    {
+      "stage": "scaling",
+      "answer": "Use a transactional outbox for notifications. Retries are idempotent. Monitor conflicts, queue age and delivery failures. Start with one database and add replicas for catalog reads."
+    },
+    {
+      "stage": "trade-offs",
+      "answer": "Strong writes cost availability during database failover. Stale catalog reads are acceptable but a reservation must recheck the primary. I would not shard before measuring a bottleneck."
+    }
+  ],
+  "execution": null
+}

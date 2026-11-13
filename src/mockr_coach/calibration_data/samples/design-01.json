@@ -1,0 +1,34 @@
+{
+  "id": "design-01",
+  "kind": "design",
+  "prompt": "Design a service that lets neighbours lend physical books. Prevent two borrowers reserving the same copy; support waiting lists, late returns, and unreliable notifications.",
+  "provenance": "Original synthetic answer authored for mockr; not an actual candidate or human-scored label.",
+  "intended_band": "weak",
+  "transcript": [
+    {
+      "stage": "requirements",
+      "answer": "Users need books."
+    },
+    {
+      "stage": "estimates",
+      "answer": "A lot of traffic."
+    },
+    {
+      "stage": "api",
+      "answer": "Use an API."
+    },
+    {
+      "stage": "data-model",
+      "answer": "A database."
+    },
+    {
+      "stage": "scaling",
+      "answer": "Add servers."
+    },
+    {
+      "stage": "trade-offs",
+      "answer": "Use the best database."
+    }
+  ],
+  "execution": null
+}

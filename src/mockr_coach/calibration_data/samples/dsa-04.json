@@ -1,0 +1,26 @@
+{
+  "id": "dsa-04",
+  "kind": "dsa",
+  "prompt": "Given integer parcel weights and a target, return indices [i,j], i<j, of the pair with smallest j then smallest i that sums to target; return [] if absent. Write solve(weights, target).\n\nState assumptions, describe your approach before coding, and discuss time and space complexity. Inputs fit in memory; n <= 10000 unless the grid has at most 10000 cells.",
+  "provenance": "Original synthetic answer authored for mockr; not an actual candidate or human-scored label.",
+  "intended_band": "strong",
+  "transcript": [
+    {
+      "stage": "approach",
+      "answer": "I maintain a map from weight to its earliest previously seen index. For each j, I check target minus weight before insertion. This preserves i less than j and returns the earliest possible j. I use setdefault to preserve the smallest i on duplicate weights. Empty input and no matching pair return an empty list."
+    },
+    {
+      "stage": "code",
+      "answer": "def solve(weights, target):\n seen = {}\n for j,w in enumerate(weights):\n  if target-w in seen: return [seen[target-w],j]\n  seen.setdefault(w,j)\n return []"
+    },
+    {
+      "stage": "complexity",
+      "answer": "For n weights, expected time is O(n) and auxiliary space O(n), because each parcel causes at most one lookup and insertion. Adversarial hash behavior can be O(n squared). Sorting changes tie ordering and requires extra index tracking, so I prefer the single pass."
+    }
+  ],
+  "execution": {
+    "passed": 5,
+    "total": 5,
+    "status": "passed"
+  }
+}

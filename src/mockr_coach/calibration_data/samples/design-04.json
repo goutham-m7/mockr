@@ -1,0 +1,34 @@
+{
+  "id": "design-04",
+  "kind": "design",
+  "prompt": "Design a service that lets neighbours lend physical books. Prevent two borrowers reserving the same copy; support waiting lists, late returns, and unreliable notifications.",
+  "provenance": "Original synthetic answer authored for mockr; not an actual candidate or human-scored label.",
+  "intended_band": "strong",
+  "transcript": [
+    {
+      "stage": "requirements",
+      "answer": "Support catalog search, per-copy holds, returns, FIFO waitlists and asynchronous alerts. Non-goals are payments and shipping. Reservation correctness takes priority over availability; target p95 reads below 300 ms."
+    },
+    {
+      "stage": "estimates",
+      "answer": "With 50000 members and three catalog reads daily, average reads are 1.74 per second; at 50x peak about 87. If each creates 12 reservations yearly, 600000 records at 1 KB use about 600 MB yearly before indexes and replicas."
+    },
+    {
+      "stage": "api",
+      "answer": "POST /copies/{copy_id}/holds requires a client idempotency key, authenticated member and expiry policy. A reused key returns the original hold. Conflicts return 409. GET /holds/{id} provides status; cancellation is idempotent."
+    },
+    {
+      "stage": "data-model",
+      "answer": "Titles and physical copies are separate. Holds reference a copy and member, with state and expiry timestamps. A partial unique constraint protects active holds. A transaction locks the copy while claiming or expiring a hold; waitlist entries have monotonic sequence ids."
+    },
+    {
+      "stage": "scaling",
+      "answer": "An outbox row commits with the hold. Workers deliver notifications with deduplication and backoff; failed alerts never undo a reservation. Index catalog queries, cache public metadata and monitor lock wait, p95 latency, waitlist age and replica lag."
+    },
+    {
+      "stage": "trade-offs",
+      "answer": "Postgres transactions simplify unique ownership. Eventual consistency works for catalog indexing but not concurrent claims. Sharding by neighborhood could isolate local demand but complicates cross-neighborhood waits. I would measure lock contention before adding that complexity."
+    }
+  ],
+  "execution": null
+}

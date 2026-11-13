@@ -1,0 +1,26 @@
+{
+  "id": "dsa-02",
+  "kind": "dsa",
+  "prompt": "Given integer parcel weights and a target, return indices [i,j], i<j, of the pair with smallest j then smallest i that sums to target; return [] if absent. Write solve(weights, target).\n\nState assumptions, describe your approach before coding, and discuss time and space complexity. Inputs fit in memory; n <= 10000 unless the grid has at most 10000 cells.",
+  "provenance": "Original synthetic answer authored for mockr; not an actual candidate or human-scored label.",
+  "intended_band": "developing",
+  "transcript": [
+    {
+      "stage": "approach",
+      "answer": "I scan pairs and return the first pair that sums to target. I need to be careful about order."
+    },
+    {
+      "stage": "code",
+      "answer": "def solve(weights, target):\n for j in range(len(weights)):\n  for i in range(j):\n   if weights[i]+weights[j]==target: return [i,j]\n return []"
+    },
+    {
+      "stage": "complexity",
+      "answer": "The nested loops are O(n squared), with O(1) extra space."
+    }
+  ],
+  "execution": {
+    "passed": 5,
+    "total": 5,
+    "status": "passed"
+  }
+}

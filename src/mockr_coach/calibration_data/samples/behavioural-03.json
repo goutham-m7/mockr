@@ -1,0 +1,30 @@
+{
+  "id": "behavioural-03",
+  "kind": "behavioural",
+  "prompt": "Describe a time you turned an ambiguous request into an actionable goal. What did you personally clarify and how did you know it helped?",
+  "provenance": "Original synthetic answer authored for mockr; not an actual candidate or human-scored label.",
+  "intended_band": "competent",
+  "transcript": [
+    {
+      "stage": "situation",
+      "answer": "Last spring our community repair group had a vague request to make signups easier. Volunteers had been manually correcting dates each week, but nobody had measured where the confusion started."
+    },
+    {
+      "stage": "task",
+      "answer": "I owned investigation and a proposal within one week. The coordinator owned the final decision. Success meant choosing a change supported by evidence rather than adding every requested feature."
+    },
+    {
+      "stage": "action",
+      "answer": "I reviewed twenty synthetic practice signup records, interviewed three volunteers and sketched two options. I chose a clearer date label over a complete form rewrite because the observed confusion clustered around the label."
+    },
+    {
+      "stage": "result",
+      "answer": "In the next twenty trial signups, date corrections fell from six to two. The sample was small and could reflect the different volunteers. The coordinator accepted a limited rollout with weekly checks."
+    },
+    {
+      "stage": "reflection",
+      "answer": "I learned that agreement on the symptom was not agreement on the goal. Next time I would set the measurement window before choosing a solution and include users who abandoned the form."
+    }
+  ],
+  "execution": null
+}

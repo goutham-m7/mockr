@@ -1,0 +1,30 @@
+{
+  "id": "behavioural-02",
+  "kind": "behavioural",
+  "prompt": "Describe a time you turned an ambiguous request into an actionable goal. What did you personally clarify and how did you know it helped?",
+  "provenance": "Original synthetic answer authored for mockr; not an actual candidate or human-scored label.",
+  "intended_band": "developing",
+  "transcript": [
+    {
+      "stage": "situation",
+      "answer": "In a volunteer project, the request was to improve the website."
+    },
+    {
+      "stage": "task",
+      "answer": "I was responsible for proposing a plan."
+    },
+    {
+      "stage": "action",
+      "answer": "I asked stakeholders what they needed and created a list."
+    },
+    {
+      "stage": "result",
+      "answer": "They agreed to the list and we started work."
+    },
+    {
+      "stage": "reflection",
+      "answer": "I would ask questions earlier next time."
+    }
+  ],
+  "execution": null
+}
