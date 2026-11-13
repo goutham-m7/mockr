@@ -82,16 +82,24 @@ class Sandbox:
             for path in sorted(paths):
                 if path.exists():
                     command += ["--ro-bind", str(path), str(path)]
+            # No writable filesystem mounts: /tmp and the synthetic root are read-only.
+            # The worker only needs /dev/null, not a writable /dev or a procfs mount.
             command += [
-                "--proc",
-                "/proc",
-                "--dev",
-                "/dev",
+                "--ro-bind-try",
+                "/etc/ld.so.cache",
+                "/etc/ld.so.cache",
+                "--dev-bind",
+                "/dev/null",
+                "/dev/null",
                 "--tmpfs",
+                "/tmp",
+                "--remount-ro",
                 "/tmp",
                 "--ro-bind",
                 str(directory),
                 "/work",
+                "--remount-ro",
+                "/",
                 "--chdir",
                 "/work",
             ]

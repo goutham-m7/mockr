@@ -168,15 +168,16 @@ Local verification used macOS arm64 and Python 3.12.15. These are implementation
 | Command | Observed result |
 |---|---|
 | `uv run mockr demo` | Three completed rounds; 15 quote-validated scores; DSA passed 5/5 cases. Scores: DSA 4.75, design 3.50, behavioural 3.80. |
-| `uv run pytest -q --cov=mockr_coach --cov-report=term-missing` | 108 tests passed; 88% statement coverage. The isolated worker is exercised by real subprocess tests but does not contribute in-process coverage. |
+| `uv run pytest -q --cov=mockr_coach --cov-report=term-missing` | macOS: 108 passed, 10 Linux-only tests skipped; 88% statement coverage. The isolated worker is exercised by real subprocess tests but does not contribute in-process coverage. |
 | `uv run python -c 'from mockr_coach.bank import load_bank; b=load_bank(); print(f"questions={len(b)} hidden_cases={sum(len(q.tests) for q in b)}")'` | `questions=30 hidden_cases=50` |
 | `uv run pytest tests/test_sandbox.py -q` | 21 tests passed, including every bundled DSA reference against all 50 hidden cases and denial of host reads, host writes, network and child processes. |
+| Linux Docker verification, command in [evidence notes](docs/evidence.md#linux-filesystem-regression) | All 118 tests passed, including 10 Linux-only filesystem regressions. |
 | `uv run ruff check .` | All checks passed. |
 | `uv run ruff format --check .` | All files formatted. |
 | `node --check src/mockr_coach/static/app.js` | Exit 0. |
 | `uv run mockr calibrate` | No labels: 0 human scores, 60 available criterion cells, 12 samples. |
 
-A real Chromium run completed a STAR round through the UI, saved it, and displayed its 3.80/5 evidence card. At a 390px viewport, document width was 390px with no horizontal overflow. No JavaScript errors were recorded. [Evidence notes](docs/evidence.md). CI is configured for macOS and Linux but has not run remotely; this repository is local only.
+A real Chromium run completed a STAR round through the UI, saved it, and displayed its 3.80/5 evidence card. At a 390px viewport, document width was 390px with no horizontal overflow. No JavaScript errors were recorded. [Evidence notes](docs/evidence.md) include the later Linux filesystem regression and local Docker verification; this is not a claim that remote CI has passed.
 
 ## Development
 
@@ -193,8 +194,9 @@ Tests use real temporary SQLite databases, native sandbox workers and local HTTP
 ## Security and limitations
 
 - This is local practice, not a public hostile-code execution service. Bindings are loopback-only; Host/Origin validation and a per-server token guard browser writes. The UI uses text nodes for untrusted content, a restrictive CSP, no remote scripts, and no telemetry.
-- Seatbelt on macOS is deprecated and OS-version-sensitive. Linux needs bubblewrap and enabled user namespaces. Windows is unsupported. Linux isolation has not yet been exercised on this workstation; its CI job is configured, not reported as passed.
-- Both backends limit CPU, output size, file descriptors, process creation and wall time. Linux caps address space at 256 MiB. macOS has **no hard memory cap** here. Do not run actively hostile code on a machine with valuable data; use a disposable VM.
+- **macOS:** Seatbelt allows reads only from the interpreter runtime, system-library paths, the worker, `/dev/null` and the root directory itself. It denies network access, child-process creation and filesystem path writes except `/dev/null`. No writable scratch directory is exposed. Seatbelt is deprecated and OS-version-sensitive.
+- **Linux:** bubblewrap unshares namespaces, drops capabilities and exposes the runtime, worker and optional dynamic-loader cache read-only. The synthetic root and empty `/tmp` are explicitly remounted read-only. Only `/dev/null` is device-bound; no writable `/dev` or procfs is exposed. File creation, mutation and deletion by path are denied throughout this filesystem, including `/tmp`, `/work` and `/`. Writes to `/dev/null` and inherited bounded output descriptors remain intentional. This is enforced by kernel mounts, not a bypassable Python audit hook. Run mockr as an ordinary unprivileged user; bubblewrap and enabled user namespaces are required. Windows is unsupported.
+- Both backends limit CPU, output size, file descriptors, process creation and wall time. Linux caps address space at 256 MiB. macOS has **no hard memory cap** here. Linux isolation was exercised locally in Docker with an unprivileged application user. Do not run actively hostile code on a machine with valuable data; use a disposable VM.
 - SQLite transcripts are plaintext. Anyone with local file access can read them. There is no authentication, encryption, transcript redaction, session resume or automatic deletion. Use synthetic practice material when privacy matters.
 - The single-user HTTP server processes one request at a time. A provider request blocks other requests until it finishes. Interrupted rounds are not saved. The UI keeps at most eight active rounds in memory.
 - The tiny calibration set is synthetic and unscored. Semantic judge reliability, score fairness and resistance to all prompt injection are unmeasured. No live LLM or real microphone test was performed.
