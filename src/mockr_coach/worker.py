@@ -18,14 +18,19 @@ def main():
     payload = json.load(sys.stdin)
     try:
         namespace = {"__name__": "candidate"}
-        with open(os.devnull, "w") as sink, contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
-            exec(compile(payload["code"], "<candidate>", "exec"), namespace)
+        with (
+            open(os.devnull, "w") as sink,
+            contextlib.redirect_stdout(sink),
+            contextlib.redirect_stderr(sink),
+        ):
+            # AST interpretation would not support real Python; OS isolation is the boundary.
+            exec(compile(payload["code"], "<candidate>", "exec"), namespace)  # noqa: S102
             result = namespace["solve"](*payload["args"])
         encoded = json.dumps({"result": result}, allow_nan=False)
         if len(encoded.encode()) > 8192:
             raise ValueError("Result too large")
         print(encoded)
-    except BaseException:
+    except BaseException:  # noqa: BLE001 - candidate SystemExit/KeyboardInterrupt must become a failed case, not terminate the protocol.
         print('{"error":"runtime-error"}')
 
 

@@ -26,7 +26,7 @@ class Question:
 
 
 def parse_question(text: str) -> Question:
-    match = re.fullmatch(r"```json\s*\n(.*?)\n```\s*\n(.+)", text.strip(), re.S)
+    match = re.fullmatch(r"```json\s*\n(.*?)\n```\s*\n(.+)", text.strip(), re.DOTALL)
     if not match:
         raise ValueError("Question needs a JSON metadata fence followed by a prompt")
     try:
@@ -45,20 +45,32 @@ def parse_question(text: str) -> Question:
         raise ValueError("Invalid round kind")
     tests = meta.get("tests", [])
     if not isinstance(tests, list):
-        raise ValueError("Invalid tests")
+        raise ValueError("Invalid tests")  # noqa: TRY004 - malformed JSON is a value error, not a Python caller type error.
     cases = []
     for case in tests:
-        if not isinstance(case, dict) or set(case) != {"args", "expected"} or not isinstance(case["args"], list):
+        if (
+            not isinstance(case, dict)
+            or set(case) != {"args", "expected"}
+            or not isinstance(case["args"], list)
+        ):
             raise ValueError("Each test needs args array and expected JSON value")
         cases.append(Case(case["args"], case["expected"]))
     reference = meta.get("reference", "")
     if not isinstance(reference, str):
-        raise ValueError("Invalid reference solution")
+        raise ValueError("Invalid reference solution")  # noqa: TRY004 - keep the public malformed-document error contract.
     if meta["kind"] == "dsa" and not cases:
         raise ValueError("DSA questions require hidden tests")
     if meta["kind"] != "dsa" and (cases or reference):
         raise ValueError("Only DSA questions can contain code/tests")
-    return Question(meta["id"], meta["kind"], meta["title"], meta["topic"], match[2].strip(), tuple(cases), reference)
+    return Question(
+        meta["id"],
+        meta["kind"],
+        meta["title"],
+        meta["topic"],
+        match[2].strip(),
+        tuple(cases),
+        reference,
+    )
 
 
 def load_bank(directory: Path | None = None) -> list[Question]:
