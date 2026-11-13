@@ -1,16 +1,16 @@
 [project]
 name = "mockr-coach"
 version = "0.1.0"
-description = "Add your description here"
+description = "Local-first, evidence-grounded AI mock interview coach"
 readme = "README.md"
 authors = [
     { name = "Goutham Madineni", email = "151193576+goutham-m7@users.noreply.github.com" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"
 dependencies = []
 
 [project.scripts]
-mockr-coach = "mockr_coach:main"
+mockr = "mockr_coach.cli:main"
 
 [build-system]
 requires = ["uv_build>=0.13.5,<0.14.0"]
