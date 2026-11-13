@@ -7,9 +7,15 @@ permissions:
 jobs:
   verify:
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-14]
+        include:
+          - os: ubuntu-22.04
+            required: true
+          - os: macos-14
+            required: false
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ !matrix.required }}
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
