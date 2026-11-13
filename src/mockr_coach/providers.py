@@ -15,6 +15,12 @@ class ProviderError(RuntimeError):
     pass
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, request, file, code, message, headers, new_url):
+        # urllib otherwise forwards Authorization to the redirect destination.
+        return None
+
+
 class MockProvider:
     """Transparent smoke-test heuristic, never presented as an actual LLM judge."""
 
@@ -65,6 +71,7 @@ class OpenAIProvider:
             )
         self.url = base_url.rstrip("/") + "/chat/completions"
         self.key, self.model, self.timeout = key, model, timeout
+        self.opener = urllib.request.build_opener(_NoRedirect())
 
     def complete(self, system: str, payload: dict) -> dict:
         body = {
@@ -85,7 +92,7 @@ class OpenAIProvider:
             },
         )
         try:
-            with urllib.request.urlopen(request, timeout=self.timeout) as response:
+            with self.opener.open(request, timeout=self.timeout) as response:
                 raw = response.read(1024 * 1024 + 1)
             if len(raw) > 1024 * 1024:
                 raise ValueError("Response too large")
