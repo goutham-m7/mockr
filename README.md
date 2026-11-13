@@ -177,7 +177,9 @@ Local verification used macOS arm64 and Python 3.12.15. These are implementation
 | `node --check src/mockr_coach/static/app.js` | Exit 0. |
 | `uv run mockr calibrate` | No labels: 0 human scores, 60 available criterion cells, 12 samples. |
 
-A real Chromium run completed a STAR round through the UI, saved it, and displayed its 3.80/5 evidence card. At a 390px viewport, document width was 390px with no horizontal overflow. No JavaScript errors were recorded. [Evidence notes](docs/evidence.md) include the later Linux filesystem regression and local Docker verification; this is not a claim that remote CI has passed.
+A real Chromium run completed a STAR round through the UI, saved it, and displayed its 3.80/5 evidence card. At a 390px viewport, document width was 390px with no horizontal overflow. No JavaScript errors were recorded. [Evidence notes](docs/evidence.md) include the Linux filesystem regression and local Docker verification.
+
+**CI:** GitHub Actions runs the full suite on Ubuntu 22.04, including the bubblewrap sandbox and the Linux-only filesystem regressions. The macOS (Seatbelt) path is verified locally only: hosted macOS runners were cancelled before starting on this account.
 
 ## Development
 

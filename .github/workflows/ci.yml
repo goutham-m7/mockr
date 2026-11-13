@@ -6,16 +6,9 @@ permissions:
   contents: read
 jobs:
   verify:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-22.04
-            required: true
-          - os: macos-14
-            required: false
-    runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ !matrix.required }}
+    # macOS runs are cancelled before starting on this account; the macOS
+    # sandbox path is verified locally (see README "Verification").
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
